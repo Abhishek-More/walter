@@ -1,5 +1,6 @@
 import requests
 import os
+import json
 from anthropic import Anthropic
 from prompts import MCP_EXTRACTION_PROMPT
 from dotenv import load_dotenv
@@ -28,7 +29,7 @@ def extract_mcp_query(natural_text):
         print(f"Error calling Claude: {e}")
         return natural_text
 
-def fetchMCP(natural_query):
+def fetchMCP(natural_query) -> dict:
     """
     Fetch MCP servers based on natural language query
     """
@@ -43,12 +44,12 @@ def fetchMCP(natural_query):
     response = requests.get(url, headers=headers)
     
     if response.status_code != 200:
-        return f"API Error: {response.status_code}"
+        return {} 
     
     serverJson = response.json()
     
     if not serverJson.get('servers') or len(serverJson['servers']) == 0:
-        return "No servers found"
+        return {} 
     
     servers = serverJson['servers']
     
@@ -59,7 +60,7 @@ def fetchMCP(natural_query):
     print(f"Found {len(servers)} servers, returning most popular:")
     print(f"Name: {top_server.get('displayName')}")
     print(f"Use Count: {top_server.get('useCount', 0)}")
-    
+
     return top_server
 
 if __name__ == "__main__":
@@ -77,10 +78,8 @@ if __name__ == "__main__":
             try:
                 best_server = fetchMCP(user_input)
                 if isinstance(best_server, dict):
-                    print(f"\nBest server: {best_server.get('displayName', 'Unknown')}")
-                    print(f"Use count: {best_server.get('useCount', 0)}")
-                    if best_server.get('description'):
-                        print(f"Description: {best_server.get('description')}")
+                    print(f"\nBest server JSON:")
+                    print(json.dumps(best_server, indent=2))
                 else:
                     print("No servers found or error occurred")
             except Exception as e:

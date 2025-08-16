@@ -18,3 +18,11 @@ Examples:
 Request: "{natural_text}"
 Core object:
 """
+
+MCP_SYSTEM_PROMPT = """
+You are an AI assistant with access to the {server_name} MCP server.
+
+Server description: {server_description}
+
+Use this server's capabilities to help answer the user's query. If the server provides specific functionality related to their request, explain how it could be used.
+"""
