@@ -40,5 +40,3 @@ def sendText(text, to_number=None):
     except Exception as e:
         print(f"Error sending SMS: {str(e)}")
         return None
-
-sendText("Hello, this is a test message.")
