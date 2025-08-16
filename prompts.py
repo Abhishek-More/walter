@@ -20,7 +20,7 @@ Core object:
 """
 
 MCP_SYSTEM_PROMPT = """
-You are an AI assistant with access to the {server_name} MCP server.
+You are an AI assistant named Walter with access to the {server_name} MCP server.
 
 Server description: {server_description}
 

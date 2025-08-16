@@ -7,6 +7,8 @@ from prompts import MCP_SYSTEM_PROMPT
 import mcp
 from mcp.client.streamable_http import streamablehttp_client
 
+from text import sendText
+
 load_dotenv()
 
 SMITHERY_API_KEY = os.getenv('SMITHERY_API_KEY')
@@ -24,11 +26,14 @@ class MCPEnhancedAssistant:
         Connect to an MCP server from Smithery registry
         """
         # Extract connection info from the server
-        server_id = mcp_server_info.get('id')
         server_url = mcp_server_info.get("homepage")
         
         url = f"{server_url}?api_key={self.smithery_api_key}"
         url = url.replace("https://", "https://server.")
+        url = url.replace("/server/", "/")
+        url += "&profile=witty-jackal-YJgUWC"
+        print("ORIG " + url)
+
         url = "https://server.smithery.ai/@jinkoso/jinko-mcp/mcp?api_key=bb25c9e0-2f85-4bb5-bccf-1adf14a41363&profile=witty-jackal-YJgUWC"
         
         print(f"Connecting to {url}")
@@ -71,6 +76,8 @@ class MCPEnhancedAssistant:
         # Find the best MCP server using your existing function
         best_server = fetchMCP(user_query)
         
+        sendText("Found a suitable MCP server! Loading...")
+        
         server_name = best_server.get('displayName', 'Unknown')
         
         print(f"\nUsing MCP server: {server_name}")
@@ -93,24 +100,28 @@ class MCPEnhancedAssistant:
         try:
             response = self.claude.messages.create(
                 model="claude-4-sonnet-20250514",
-                max_tokens=1000,
-                system=system_prompt,
+                max_tokens=300,
+                system=system_prompt + " Keep responses under 1000 characters for SMS.",
                 messages=[{"role": "user", "content": user_query}]
             )
             
-            # TODO: Parse Claude's response to see if it wants to call MCP tools
-            # For now, just return the response
+            # Ensure response doesn't exceed 1000 characters
+            response_text = response.content[0].text
+            if len(response_text) > 1000:
+                response_text = response_text[:997] + "..."
             
+            print(response_text)
             return {
                 "mcp_server": best_server,
                 "session": session,
                 "tools": tools,
-                "response": response.content[0].text
+                "response": response_text
             }
         
         except Exception as e:
             print(f"Error querying Claude: {e}")
             return None
+
 
 async def main():
     """

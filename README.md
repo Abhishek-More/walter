@@ -66,9 +66,61 @@ python smart_event_cli.py weather "nyc"
 python smart_event_cli.py weather "40.7128,-74.0060"
 ```
 
-## 🧠 Smart Event Search CLI
+## 🔐 Google Calendar Integration
 
-The smart event search CLI provides weather-aware event recommendations:
+The application now includes Google Calendar integration for event scheduling and conflict checking. Credentials are managed securely using environment variables.
+
+### **Environment Setup**
+
+Create a `config.env` file in your project root:
+
+```bash
+# Google Calendar API Credentials
+GOOGLE_CLIENT_ID=your_client_id_here
+GOOGLE_CLIENT_SECRET=your_client_secret_here
+GOOGLE_PROJECT_ID=your_project_id_here
+GOOGLE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+GOOGLE_TOKEN_URI=https://oauth2.googleapis.com/token
+GOOGLE_AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
+GOOGLE_REDIRECT_URI=http://localhost
+```
+
+### **Testing Calendar Integration**
+
+```bash
+# Test environment variable setup
+python test_env_calendar.py
+
+# Test natural language calendar CLI
+python natural_calendar_cli.py "find me vintage markets tomorrow"
+```
+
+## 🗣️ Natural Language Calendar CLI
+
+The natural language calendar CLI understands complex queries and integrates multiple services:
+
+### **Natural Language Examples**
+
+```bash
+# Find vintage markets for tomorrow
+python natural_calendar_cli.py "find me vintage markets tomorrow"
+
+# Search with location and travel constraints
+python natural_calendar_cli.py "I want vintage popup shops this weekend, starting from 162 East 82nd Street, max 30 min travel"
+
+# Check for conflicts
+python natural_calendar_cli.py "show me vintage festivals that conflict with my current events this weekend"
+```
+
+### **Features**
+
+- **Natural Language Parsing**: Understands complex queries like "vintage markets this weekend"
+- **Calendar Integration**: Checks availability and conflicts
+- **Travel Time Analysis**: Considers your starting location and travel constraints
+- **Interactive Scheduling**: Choose events and schedule them with smart time suggestions
+- **Multi-Service Integration**: Combines Exa Search, Weather, Maps, and Google Calendar
+
+## 🧠 Smart Event Search CLI
 
 ### **Search Command**
 
