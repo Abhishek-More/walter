@@ -7,6 +7,8 @@ from prompts import MCP_SYSTEM_PROMPT
 import mcp
 from mcp.client.streamable_http import streamablehttp_client
 
+from twilio import sendText
+
 load_dotenv()
 
 SMITHERY_API_KEY = os.getenv('SMITHERY_API_KEY')
@@ -70,6 +72,8 @@ class MCPEnhancedAssistant:
         
         # Find the best MCP server using your existing function
         best_server = fetchMCP(user_query)
+        
+        sendText("Found a suitable MCP server! Loading...")
         
         server_name = best_server.get('displayName', 'Unknown')
         
