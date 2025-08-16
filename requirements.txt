@@ -1,1 +1,4 @@
 Flask==2.3.3
+anthropic
+requests
+python-dotenv
